@@ -1,4 +1,4 @@
-package org.example.dto;
+package org.example.dto.member;
 
 public class MemberDto {
     private String id;
