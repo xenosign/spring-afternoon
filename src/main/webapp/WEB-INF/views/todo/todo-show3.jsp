@@ -5,7 +5,7 @@
     <title>TODO 목록</title>
 </head>
 <body>
-<%@ include file="header.jsp"%>
+<%@ include file="../header.jsp"%>
     <h1>TODO 목록 V3</h1>
     <ul>
         <li><b>할 일</b></li>

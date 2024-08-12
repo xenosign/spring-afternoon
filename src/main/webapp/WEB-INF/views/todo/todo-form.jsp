@@ -6,7 +6,7 @@
     <title>TODO 추가</title>
 </head>
 <body>
-<%@ include file="header.jsp"%>
+<%@ include file="../header.jsp"%>
 <h1>TODO 추가</h1>
 <form method="get" action="/todo/form/save">
     <label for="todo">할 일 :</label>
