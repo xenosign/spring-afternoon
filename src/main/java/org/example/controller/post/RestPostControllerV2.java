@@ -2,48 +2,45 @@ package org.example.controller.post;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.annotations.Param;
 import org.example.dto.post.PostDto;
 import org.example.dto.post.PostRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-@Controller
+@RestController
 @Slf4j
-@RequestMapping("/post/v1")
-public class PostController {
+@RequiredArgsConstructor
+@CrossOrigin(origins = "*")
+@RequestMapping("/post/v2/rest")
+public class RestPostControllerV2 {
     private final PostRepository postRepository;
     private String context = "/post";
 
-    @Autowired
-    public PostController(PostRepository postRepository) {
-        this.postRepository = postRepository;
-    }
-
     // 게시글 목록 보기
     @GetMapping("/show")
-    public String postList(HttpServletRequest request, Model model) {
+    public ResponseEntity<List<PostDto>> postList(HttpServletRequest request) {
         log.info("=========> 게시글 목록 페이지 호출, " + request.getRequestURI());
 
         List<PostDto> list = postRepository.findAll();
-        model.addAttribute("postList", list);
 
-        // /post/post-show.jsp
-        return context + "/post-show";
+        // ok = 200번
+        return ResponseEntity.ok(list);
+    }
+
+    @GetMapping(value = "/test", produces = "text/plain;charset=UTF-8")
+    public ResponseEntity<String> test() {
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("요청을 처리할 수 없습니다");
     }
 
     
     // 게시물 조건 조회
     @GetMapping("/search")
-    public String postSearch(
+    public List<PostDto> postSearch(
          @RequestParam("title") String title,
          @RequestParam("content") String content,
          HttpServletRequest request,
@@ -52,8 +49,7 @@ public class PostController {
         log.info("============> 게시글 검색 기능 호출, " + request.getRequestURI());
 
         List<PostDto> searchedList = postRepository.findByCondition(title, content);
-        model.addAttribute("postList", searchedList);
-        return context + "/post-show";
+        return searchedList;
     }
 
     // 게시글 추가 페이지 요청
@@ -110,28 +106,15 @@ public class PostController {
     }
 
     // 삭제 기능 컨트롤러
-    @PostMapping("/delete")
-    public String postDelete(@RequestParam("id") String id, HttpServletRequest request) {
+    @DeleteMapping(value = "/delete/{id}", produces = "text/plain;charset=UTF-8")
+    public ResponseEntity<String> postDelete(@PathVariable("id") Long id, HttpServletRequest request) {
         log.info("================> 게시글 삭제 기능 호출, " + request.getRequestURI());
+        int affectedRows = postRepository.delete(id);
 
-        long postId = Long.parseLong(id);
-        int affectedRows = postRepository.delete(postId);
-
-        if (affectedRows > 0) log.info("삭제 성공");
-
-        return "redirect:/post/v1/show";
+        if (affectedRows > 0) {
+            return ResponseEntity.ok("삭제 성공");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("삭제 실패");
+        }        
     }
-
-    // 에러 강제 발생
-    @GetMapping("/error")
-    public String error(HttpServletRequest request) {
-        log.info("================> 강제 에러 발생, " + request.getRequestURI());
-
-        throw new RuntimeException("의도적으로 발생시킨 예외");
-    }
-
-
-
-
-
 }
