@@ -14,6 +14,7 @@ ext {
     junitVersion = '5.9.2'
     springVersion = '5.3.37'
     lombokVersion = '1.18.30'
+    springSecurityVersion = '5.8.13'
 }
 
 sourceCompatibility = '1.17'
@@ -78,6 +79,15 @@ dependencies {
     implementation 'org.hibernate:hibernate-core:5.5.6.Final'
     implementation 'mysql:mysql-connector-java:8.0.33'
 
+
+    // 스프링 시큐리티
+    implementation("org.springframework.security:spring-security-web:${springSecurityVersion}")
+    implementation("org.springframework.security:spring-security-config:${springSecurityVersion}")
+    implementation("org.springframework.security:spring-security-core:${springSecurityVersion}")
+    implementation("org.springframework.security:spring-security-taglibs:${springSecurityVersion}")
+
+    // 암호화
+    implementation 'org.springframework.security:spring-security-crypto'
 
 
 }
