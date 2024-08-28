@@ -89,7 +89,8 @@ dependencies {
     // 암호화
     implementation 'org.springframework.security:spring-security-crypto'
 
-
+    // 카카오용 GSON
+    implementation 'com.google.code.gson:gson:2.8.6'
 }
 
 test {
