@@ -24,7 +24,6 @@ public class KakaoOauthService {
         try {
             URL url = new URL(reqURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
             conn.setRequestMethod("POST");
             conn.setDoOutput(true);
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
